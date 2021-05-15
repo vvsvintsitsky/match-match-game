@@ -31,22 +31,20 @@ export class Controller implements FieldController {
 
         if (!this.selectedCardPosition) {
             this.selectedCardPosition = position;
-            this.fieldView.markCard(this.selectedCardPosition);
             return;
         }
 
         const isWrongGuess = !this.fieldModel.pairCards(this.selectedCardPosition, position);
         if (isWrongGuess) {
-            this.fieldView.unmarkCard(this.selectedCardPosition);
-            this.fieldView.turnCardDown(this.selectedCardPosition);
-            this.fieldView.turnCardDown(position);
+            this.processWrongGuess(this.selectedCardPosition);
+            this.processWrongGuess(position);
             this.selectedCardPosition = undefined;
             this.gameStatistics.addWrongGuess();
             return;
         }
 
-        this.fieldView.unmarkCard(this.selectedCardPosition);
-        this.fieldView.unmarkCard(position);
+        this.fieldView.markCardSuccess(this.selectedCardPosition);
+        this.fieldView.markCardSuccess(position);
         this.selectedCardPosition = undefined;
         this.gameStatistics.addCorrectGuess();
 
@@ -58,5 +56,10 @@ export class Controller implements FieldController {
     private shouldIgnoreCardSelection(position: CardPosition) {
         const isPreviouslySelectedPosition = position.x === this.selectedCardPosition?.x && position.y === this.selectedCardPosition.y;
         return isPreviouslySelectedPosition || this.fieldModel.isCardPaired(position);
+    }
+
+    private processWrongGuess(position: CardPosition) {
+        this.fieldView.markCardFail(position);
+        this.fieldView.turnCardDown(position);
     }
 }

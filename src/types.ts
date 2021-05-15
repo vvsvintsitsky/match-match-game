@@ -31,8 +31,8 @@ export interface FieldView {
     destroy(): void;
     turnCardUp(position: CardPosition): void;
     turnCardDown(position: CardPosition): void;
-    markCard(position: CardPosition): void;
-    unmarkCard(position: CardPosition): void;
+    markCardSuccess(position: CardPosition): void;
+    markCardFail(position: CardPosition): void;
 }
 
 export interface FieldController {

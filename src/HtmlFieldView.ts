@@ -50,13 +50,15 @@ export class HtmlFieldView implements FieldView {
     }
 
     public turnCardDown(position: CardPosition): void {
-        this.changeCardContent(position, this.cardRenderer.renderShirt());
+        setTimeout(() => this.changeCardContent(position, this.cardRenderer.renderShirt()), this.getTurnDownDelay());
     }
 
-    public markCard(position: CardPosition): void {
-        const cardElement = this.findCardElementForPosition(position);
+    public markCardSuccess(position: CardPosition): void {
+        this.markCard(position, "-7px 7px 7px green");
+    }
 
-        cardElement.style.boxShadow = "5px 5px 5px red";
+    public markCardFail(position: CardPosition): void {
+        this.markCard(position, "5px 5px 5px red");
     }
 
     public unmarkCard(position: CardPosition): void {
@@ -95,6 +97,22 @@ export class HtmlFieldView implements FieldView {
 
     private isValidElement(element: EventTarget | null): element is HTMLElement {
         return element instanceof HTMLElement;
+    }
+
+    private markCard(position: CardPosition, boxShadow: string): void {
+        const cardElement = this.findCardElementForPosition(position);
+
+        cardElement.style.boxShadow = boxShadow;
+
+        setTimeout(() => this.unmarkCard(position), this.getMarkDuration());
+    }
+
+    private getMarkDuration() {
+        return 100;
+    }
+
+    private getTurnDownDelay() {
+        return this.getMarkDuration();
     }
 
     private onFieldClick = ({ target }: MouseEvent) => {
