@@ -19,7 +19,10 @@ export class HtmlFieldView implements FieldView {
         for (let row = 0; row < rows; row++) {
             for (let column = 0; column < columns; column++) {
                 const cardElement = document.createElement("div");
-                cardElement.setAttribute("style", "margin: 10px 10px; width: 30px; height: 40px");
+                const { style } = cardElement;
+                style.margin = "10px 10px";
+                style.width = "30px";
+                style.height = "40px";
                 cardElement.setAttribute(this.getRowAttribute(), String(row));
                 cardElement.setAttribute(this.getColumnAttribute(), String(column));
 
@@ -29,7 +32,9 @@ export class HtmlFieldView implements FieldView {
             }
         }
 
-        this.fieldElement.setAttribute("style", "display: flex; flex-wrap: wrap;");
+        const { style } = this.fieldElement;
+        style.display = "flex";
+        style.flexWrap = "wrap";
 
         this.fieldElement.addEventListener("click", this.onFieldClick);
 
