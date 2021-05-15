@@ -1,0 +1,17 @@
+{
+  "name": "match-match",
+  "version": "0.0.1",
+  "description": "match-match game",
+  "scripts": {
+    "start": "webpack serve --config ./webpack.config.js"
+  },
+  "author": "vvsvintsitsky",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-loader": "9.1.2",
+    "typescript": "4.2.4",
+    "webpack": "5.37.0",
+    "webpack-cli": "4.7.0",
+    "webpack-dev-server": "3.11.2"
+  }
+}
