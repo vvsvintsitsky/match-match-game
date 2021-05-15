@@ -40,3 +40,9 @@ export interface FieldController {
     destroy(): void;
     selectCard(position: CardPosition): void;
 }
+
+export interface GameStatistics {
+    addCorrectGuess(): void;
+    addWrongGuess(): void;
+    calculateScore(timeSpentMilliseconds: number): number;
+}
