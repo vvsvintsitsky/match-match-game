@@ -1,4 +1,4 @@
-import { CardPosition, FieldController, FieldModel, FieldView, GameStatistics } from "./types";
+import { CardPosition, FieldController, FieldModel, FieldView, GameStatistics } from "../types";
 
 export class Controller implements FieldController {
     private fieldView: FieldView;

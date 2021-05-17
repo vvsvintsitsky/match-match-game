@@ -1,7 +1,7 @@
-import { HtmlFieldView } from "./HtmlFieldView";
-import { Model } from "./Model";
-import { Controller } from "./Controller";
-import { Renderer } from "./Renderer";
+import { HtmlFieldView } from "./field/HtmlFieldView";
+import { Model } from "./field/Model";
+import { Controller } from "./field/Controller";
+import { Renderer } from "./field/Renderer";
 import { Statistics } from "./Statistics";
 
 const model = new Model({ rows: 3, columns: 2 }, [{ id: "1", value: "blue"}, { id: "2", value: "green"}]);
