@@ -1,13 +1,21 @@
 
 import { Game } from "./Game";
+import { IdbStorage } from "./storage/IdbStorage";
 import { Tabs } from "./tabs/Tabs";
 import { Tab } from "./types";
+
+const storage = new IdbStorage("yourGithubId");
+const user = {
+  firstName: "firstName",
+  lastName: "lastName",
+  email: "user@example.com",
+};
 
 const TABS: Tab[] = [
   {
     id: "game",
     name: "Game",
-    getContent: () => new Game({ rows: 3, columns: 2 }, [{ id: "1", value: "blue" }, { id: "2", value: "green" }]),
+    getContent: () => new Game({ rows: 3, columns: 2 }, [{ id: "1", value: "blue" }, { id: "2", value: "green" }], user, storage),
   },
   {
     id: "stubOne",
@@ -46,3 +54,6 @@ const TABS: Tab[] = [
 const tabs = new Tabs(TABS);
 const tabsElement = tabs.render();
 document.body.append(tabsElement);
+
+// @ts-ignore
+window.gameStorage = storage;

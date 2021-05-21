@@ -3,7 +3,7 @@ import { Model } from "./field/Model";
 import { Controller } from "./field/Controller";
 import { Renderer } from "./field/Renderer";
 import { Statistics } from "./Statistics";
-import { Card, FieldController, FieldSize, FieldView, Renderable } from "./types";
+import { Card, FieldController, FieldSize, FieldView, GameStorage, Renderable, User } from "./types";
 
 export class Game implements Renderable {
   private controller: FieldController;
@@ -11,7 +11,7 @@ export class Game implements Renderable {
   private statistics: Statistics;
   private startTime: number;
 
-  constructor(fieldSize: FieldSize, cards: Card[]) {
+  constructor(fieldSize: FieldSize, cards: Card[], private user: User, private storage: GameStorage) {
     const model = new Model(fieldSize, cards);
     this.statistics = new Statistics();
     this.controller = new Controller(model, () => this.getView(), this.statistics, () => this.onEnd());
@@ -35,8 +35,15 @@ export class Game implements Renderable {
     return this.view;
   }
 
-  private onEnd () {
-    alert(`score: ${this.statistics.calculateScore(this.getCurrentTimeInMilliseconds() - this.startTime)}`)
+  private async onEnd () {
+    const result = {
+      score: this.statistics.calculateScore(this.getCurrentTimeInMilliseconds() - this.startTime),
+      user: this.user,
+    };
+
+    await this.storage.saveResult(result);
+    
+    alert(`score: ${result.score}`)
   }
 
   private getCurrentTimeInMilliseconds() {

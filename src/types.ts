@@ -53,3 +53,19 @@ export interface Tab {
     name: string;
     getContent: () => Renderable;
 }
+
+export interface User {
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
+export interface GameResult {
+    user: User;
+    score: number;
+}
+
+export interface GameStorage {
+    getResults: () => Promise<GameResult[]>;
+    saveResult: (result: GameResult) => Promise<void>;
+}
