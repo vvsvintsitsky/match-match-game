@@ -9,16 +9,13 @@ export class Game implements Renderable {
   private controller: FieldController;
   private view: FieldView;
   private statistics: Statistics;
-  private startTime!: number;
+  private startTime: number;
 
   constructor(fieldSize: FieldSize, cards: Card[]) {
     const model = new Model(fieldSize, cards);
     this.statistics = new Statistics();
     this.controller = new Controller(model, () => this.getView(), this.statistics, () => this.onEnd());
     this.view = new HtmlFieldView(model, new Renderer(), () => this.getController());
-  }
-
-  public resetStartTime() {
     this.startTime = this.getCurrentTimeInMilliseconds();
   }
 
