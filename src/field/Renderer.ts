@@ -1,4 +1,4 @@
-import { CardRenderer, Card } from "./types";
+import { CardRenderer, Card } from "../types";
 
 export class Renderer implements CardRenderer<HTMLElement> {
     renderCard(card: Card): HTMLElement {

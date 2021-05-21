@@ -26,9 +26,12 @@ export interface CardRenderer<T> {
     renderShirt(): T;
 }
 
-export interface FieldView {
-    init(): void;
-    destroy(): void;
+export interface Renderable {
+    render(): HTMLElement;
+    dispose(): void;
+}
+
+export interface FieldView extends Renderable {
     turnCardUp(position: CardPosition): void;
     turnCardDown(position: CardPosition): void;
     markCardSuccess(position: CardPosition): void;
@@ -36,8 +39,6 @@ export interface FieldView {
 }
 
 export interface FieldController {
-    init(): void;
-    destroy(): void;
     selectCard(position: CardPosition): void;
 }
 
@@ -45,4 +46,10 @@ export interface GameStatistics {
     addCorrectGuess(): void;
     addWrongGuess(): void;
     calculateScore(timeSpentMilliseconds: number): number;
+}
+
+export interface Tab {
+    id: string;
+    name: string;
+    getContent: () => Renderable;
 }

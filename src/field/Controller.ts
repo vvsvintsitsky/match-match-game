@@ -1,25 +1,14 @@
 import { CardPosition, FieldController, FieldModel, FieldView, GameStatistics } from "../types";
 
 export class Controller implements FieldController {
-    private fieldView: FieldView;
-
     private selectedCardPosition: CardPosition | undefined;
 
     constructor(
         private fieldModel: FieldModel,
-        createFieldView: (controller: FieldController) => FieldView,
+        private getView: () => FieldView,
         private gameStatistics: GameStatistics,
         private onEnd: () => void,
     ) {
-        this.fieldView = createFieldView(this);
-    }
-
-    public init(): void {
-        this.fieldView.init();
-    }
-
-    public destroy(): void {
-        this.fieldView.destroy();
     }
 
     public selectCard(position: CardPosition): void {
@@ -27,7 +16,7 @@ export class Controller implements FieldController {
             return;
         }
 
-        this.fieldView.turnCardUp(position);
+        this.getView().turnCardUp(position);
 
         if (!this.selectedCardPosition) {
             this.selectedCardPosition = position;
@@ -43,8 +32,9 @@ export class Controller implements FieldController {
             return;
         }
 
-        this.fieldView.markCardSuccess(this.selectedCardPosition);
-        this.fieldView.markCardSuccess(position);
+        const view = this.getView();
+        view.markCardSuccess(this.selectedCardPosition);
+        view.markCardSuccess(position);
         this.selectedCardPosition = undefined;
         this.gameStatistics.addCorrectGuess();
 
@@ -59,7 +49,8 @@ export class Controller implements FieldController {
     }
 
     private processWrongGuess(position: CardPosition) {
-        this.fieldView.markCardFail(position);
-        this.fieldView.turnCardDown(position);
+        const view = this.getView();
+        view.markCardFail(position);
+        view.turnCardDown(position);
     }
 }

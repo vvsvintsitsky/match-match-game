@@ -1,19 +1,18 @@
-import { FieldView, CardPosition, FieldModel, CardRenderer, FieldController } from "./types";
+import { FieldView, CardPosition, FieldModel, CardRenderer, FieldController } from "../types";
 
 export class HtmlFieldView implements FieldView {
-    private fieldElement!: HTMLElement;
+    private fieldElement: HTMLElement;
+    private scheduledTimeoutIds: Map<number, number> = new Map();
 
     constructor(
-        private rootElement: HTMLElement,
         private fieldModel: FieldModel,
         private cardRenderer: CardRenderer<HTMLElement>,
-        private fieldController: FieldController
+        private getController: () => FieldController
     ) {
+        this.fieldElement = document.createElement("div");
     }
 
-    public init(): void {
-        this.clearRootElement();
-        this.fieldElement = document.createElement("div");
+    public render() {
         const { rows, columns } = this.fieldModel.getSize();
 
         for (let row = 0; row < rows; row++) {
@@ -38,11 +37,11 @@ export class HtmlFieldView implements FieldView {
 
         this.fieldElement.addEventListener("click", this.onFieldClick);
 
-        this.rootElement.appendChild(this.fieldElement);
+        return this.fieldElement;
     }
 
-    public destroy(): void {
-        this.clearRootElement();
+    public dispose(): void {
+        this.scheduledTimeoutIds.forEach(this.cancelTimeoutAction);
     }
 
     public turnCardUp(position: CardPosition): void {
@@ -50,7 +49,7 @@ export class HtmlFieldView implements FieldView {
     }
 
     public turnCardDown(position: CardPosition): void {
-        setTimeout(() => this.changeCardContent(position, this.cardRenderer.renderShirt()), this.getTurnDownDelay());
+        this.scheduleTimeoutAction(() => this.changeCardContent(position, this.cardRenderer.renderShirt()), this.getTurnDownDelay());
     }
 
     public markCardSuccess(position: CardPosition): void {
@@ -65,10 +64,6 @@ export class HtmlFieldView implements FieldView {
         const cardElement = this.findCardElementForPosition(position);
 
         cardElement.style.boxShadow = "";
-    }
-
-    private clearRootElement() {
-        this.rootElement.innerHTML = "";
     }
 
     private getRowAttribute() {
@@ -104,7 +99,7 @@ export class HtmlFieldView implements FieldView {
 
         cardElement.style.boxShadow = boxShadow;
 
-        setTimeout(() => this.unmarkCard(position), this.getMarkDuration());
+        this.scheduleTimeoutAction(() => this.unmarkCard(position), this.getMarkDuration());
     }
 
     private getMarkDuration() {
@@ -126,7 +121,20 @@ export class HtmlFieldView implements FieldView {
             return;
         }
 
-        this.fieldController.selectCard(position);
+        this.getController().selectCard(position);
+    }
+
+    private scheduleTimeoutAction(action: () => void, delay: number) {
+        const timeoutId = window.setTimeout(() => {
+            action();
+            this.scheduledTimeoutIds.delete(timeoutId);
+        }, delay);
+        this.scheduledTimeoutIds.set(timeoutId, timeoutId);
+    }
+
+    private cancelTimeoutAction = (timeoutId: number) => {
+        clearTimeout(timeoutId);
+        this.scheduledTimeoutIds.delete(timeoutId);
     }
 
     private defineCardPosition(element: HTMLElement): CardPosition | undefined {

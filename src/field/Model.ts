@@ -1,4 +1,4 @@
-import { Card, CardPosition, FieldModel, FieldSize } from "./types";
+import { Card, CardPosition, FieldModel, FieldSize } from "../types";
 
 export class Model implements FieldModel {
     private hitMap!: Record<string, Record<string, boolean> | undefined>;

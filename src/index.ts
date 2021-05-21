@@ -1,20 +1,48 @@
-import { HtmlFieldView } from "./field/HtmlFieldView";
-import { Model } from "./field/Model";
-import { Controller } from "./field/Controller";
-import { Renderer } from "./field/Renderer";
-import { Statistics } from "./Statistics";
 
-const model = new Model({ rows: 3, columns: 2 }, [{ id: "1", value: "blue"}, { id: "2", value: "green"}]);
-const statistics = new Statistics();
+import { Game } from "./Game";
+import { Tabs } from "./tabs/Tabs";
+import { Tab } from "./types";
 
-const getCurrentTimeInMilliseconds = () => new Date().getTime();
-const startTime = getCurrentTimeInMilliseconds();
+const TABS: Tab[] = [
+  {
+    id: "game",
+    name: "Game",
+    getContent: () => new Game({ rows: 3, columns: 2 }, [{ id: "1", value: "blue" }, { id: "2", value: "green" }]),
+  },
+  {
+    id: "stubOne",
+    name: "Stub tab XXX",
+    getContent: () => ({
+      dispose: () => undefined,
+      render: () => {
+        const div = document.createElement("div");
+        div.textContent = "FIRST";
+        const { style } = div;
+        style.height = "100px";
+        style.width = "300px";
+        style.backgroundColor = "violet";
+        return div;
+      }
+    })
+  },
+  {
+    id: "stubTwo",
+    name: "Stub tab #2",
+    getContent: () => ({
+      dispose: () => undefined,
+      render: () => {
+        const div = document.createElement("div");
+        div.textContent = "SECOND";
+        const { style } = div;
+        style.height = "100px";
+        style.width = "300px";
+        style.backgroundColor = "pink";
+        return div;
+      }
+    })
+  }
+];
 
-const controller = new Controller(
-  model,
-  (controller) => new HtmlFieldView(document.body, model, new Renderer(), controller),
-  statistics,
-  () => alert(`score: ${statistics.calculateScore(getCurrentTimeInMilliseconds() - startTime)}`),
-);
-
-controller.init();
+const tabs = new Tabs(TABS);
+const tabsElement = tabs.render();
+document.body.append(tabsElement);
