@@ -54,6 +54,3 @@ const TABS: Tab[] = [
 const tabs = new Tabs(TABS);
 const tabsElement = tabs.render();
 document.body.append(tabsElement);
-
-// @ts-ignore
-window.gameStorage = storage;
